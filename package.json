@@ -4,20 +4,20 @@
   "description": "A basic typescript app starter for newbies in 2022.",
   "main": "app.js",
   "scripts": {
-    "build": "rimraf ./build && tsc",
-    "start:dev": "nodemon",
     "start": "nodemon --exec ts-node-dev src/app",
-    "start2": "npm run build && node build/app.js",
+    "build": "webpack --config webpack.config.js",
+    "compile": "rimraf ./build && tsc",
+    "start:dev": "nodemon",
     "lint": "eslint . --ext .ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "io-one": "^0.2.1",
-    "mysql-export": "^0.2.1",
+    "io-one": "^0.2.5",
     "mysql2": "^2.3.3",
-    "onecore": "^0.0.41"
+    "mysql2-core": "^0.2.1",
+    "onecore": "^0.0.43"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.31.0",

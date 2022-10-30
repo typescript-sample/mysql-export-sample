@@ -1,6 +1,6 @@
 import { createWriteStream, DelimiterFormatter, FileWriter } from 'io-one';
-import { Exporter, ExportService, Statement } from 'mysql-export';
 import mysql from 'mysql2';
+import { Exporter, ExportService, Statement } from 'mysql2-core';
 import { User, userModel } from './user';
 
 const DB_HOST = 'sql6.freesqldatabase.com';
@@ -10,15 +10,15 @@ const DB_PWD = 'dqPFB293Gq';
 const USE_SERVICE = false;
 
 export class QueryBuilder {
-  build = (ctx?: any): Promise<Statement> => Promise.resolve({
+  build = (): Promise<Statement> => Promise.resolve({
     query: 'SELECT * FROM users'
   })
 }
 
 async function main() {
   const dir = './dest_dir/';
-  const writer = createWriteStream(dir, 'export.csv');
-  const w2 = new FileWriter(writer);
+  const streamWrite = createWriteStream(dir, 'export.csv');
+  const writer = new FileWriter(streamWrite);
   const connection = mysql.createConnection({
     host: DB_HOST,
     user: DB_USER,
@@ -26,15 +26,12 @@ async function main() {
     password: DB_PWD
   });
 
-  // (D) EXPORT TO CSV
   const formatter = new DelimiterFormatter<User>(',', userModel);
   const queryBuilder = new QueryBuilder();
 
-  // (D1) ON ERROR
-  // const exporter = new ExportService<User>(pool, queryBuilder, transform, writer);
   const exporter = USE_SERVICE
-    ? new ExportService(connection, queryBuilder, formatter, w2, userModel)
-    : new Exporter<User>(connection, queryBuilder.build, formatter.format, w2.write, w2.end, userModel);
+    ? new ExportService(connection, queryBuilder, formatter, writer, userModel)
+    : new Exporter<User>(connection, queryBuilder.build, formatter.format, writer.write, writer.end, userModel);
   const total = await exporter.export();
 
   console.log('total ' + total);
