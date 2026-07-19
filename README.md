@@ -24,9 +24,7 @@ The application itself contains almost no infrastructure code because those resp
                  MySQL
                    │
                    ▼
-             mysql2-core
-                   │
-          (sql-core contracts)
+              mysql2-core
                    │
                    ▼
               Application
@@ -64,7 +62,7 @@ DelimiterFormatter
         │
         ▼
     FileWriter
-    (io-one)
+     (io-one)
         │
         ▼
     users.csv
@@ -78,7 +76,6 @@ DelimiterFormatter
 | ----------- | --------------------------------------------------- |
 | config-plus | Load and merge application configuration            |
 | logger-core | Logging                                             |
-| sql-core    | Standard SQL programming model                      |
 | mysql2-core | MySQL implementation of sql-core                    |
 | io-one      | CSV formatting, file writing and workflow utilities |
 
@@ -127,8 +124,6 @@ This sample demonstrates how those concerns can be solved by composing reusable 
 
 
               Database
-                 │
-             sql-core
                  │
             mysql2-core
 
