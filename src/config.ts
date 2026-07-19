@@ -1,5 +1,5 @@
 export const config = {
-  service: "import-user",
+  service: "export-user",
   log: {
     level: "DEBUG",
     map: {

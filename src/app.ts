@@ -7,7 +7,7 @@ import path from "path"
 import { config, environments } from "./config"
 import { User, userModel } from "./user"
 
-const conf = merge(config, process.env, environments, process.env.ENV)
+const cfg = merge(config, process.env, environments, process.env.ENV)
 
 export class QueryBuilder {
   build = (): Promise<Statement> =>
@@ -18,16 +18,16 @@ export class QueryBuilder {
 
 async function main() {
   const now = new Date()
-  const errorWriter = new LogWriter(getPrefix(conf.error.prefix, now) + "_" + timeToString(now) + conf.error.suffix, conf.error.directory)
-  const logWriter = new LogWriter(getPrefix(conf.info.prefix, now) + "_" + timeToString(now) + conf.info.suffix, conf.info.directory)
+  const errorWriter = new LogWriter(getPrefix(cfg.error.prefix, now) + "_" + timeToString(now) + cfg.error.suffix, cfg.error.directory)
+  const logWriter = new LogWriter(getPrefix(cfg.info.prefix, now) + "_" + timeToString(now) + cfg.info.suffix, cfg.info.directory)
 
-  const logger = createLogger(conf.log, undefined, undefined, errorWriter.write, logWriter.write)
+  const logger = createLogger(cfg.log, undefined, undefined, errorWriter.write, logWriter.write)
 
   const dir = "./dest_dir/"
   const filename = "export.csv"
   const streamWrite = createWriteStream(dir, filename)
   const writer = new FileWriter(streamWrite)
-  const connection = mysql.createConnection(conf.db)
+  const connection = mysql.createConnection(cfg.db)
 
   const formatter = new DelimiterFormatter<User>(",", userModel)
   const queryBuilder = new QueryBuilder()

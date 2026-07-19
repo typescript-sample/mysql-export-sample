@@ -46,28 +46,28 @@ config-plus    logger-core    io-one
 # Export Pipeline
 
 ```text
-  MySQL
-    │
-    ▼
-Streaming Export
-(mysql2-core)
-    │
-    ▼
+      MySQL
+        │
+        ▼
+ Streaming Export
+   (mysql2-core)
+        │
+        ▼
 Application Objects
-    │
-    ▼
+        │
+        ▼
 DelimiterFormatter
-  (io-one)
-    │
-    ▼
-CSV Records
-    │
-    ▼
- FileWriter
- (io-one)
-    │
-    ▼
-customers.csv
+    (io-one)
+        │
+        ▼
+   CSV Records
+        │
+        ▼
+    FileWriter
+    (io-one)
+        │
+        ▼
+    users.csv
 ```
 
 ---
@@ -113,25 +113,29 @@ This sample demonstrates how those concerns can be solved by composing reusable 
 # Ecosystem
 
 ```text
-                  core-ts
+         core-ts ecosystem
+
 
            Configuration
                  │
-          config-plus
+            config-plus
 
-            Database
-                 │
-            sql-core
-                 │
-          mysql2-core
 
-           File Output
+              Logging
                  │
-              io-one
+            logger-core
 
-             Logging
+
+              Database
                  │
-           logger-core
+             sql-core
+                 │
+            mysql2-core
+
+
+            File Output
+                 │
+               io-one
 ```
 
 Each library can evolve independently while remaining easy to combine.
@@ -165,7 +169,7 @@ This separation keeps both libraries focused and reusable.
 Application configuration is managed by **config-plus**.
 
 ```ts
-const conf = merge(config, process.env, environments, process.env.ENV)
+const cfg = merge(config, process.env, environments, process.env.ENV)
 ```
 
 Configuration can be overridden for different environments without modifying application code.
@@ -231,7 +235,7 @@ The export pipeline remains unchanged.
 This sample also demonstrates why **io-one** contains a small set of workflow utilities.
 
 ```ts
-const filename = getPrefix("CUSTOMER_", now) + "_" + timeToString(now) + ".csv"
+const filename = getPrefix("user_", now) + "_" + timeToString(now) + ".csv"
 ```
 
 Instead of creating project-specific helper functions, these common batch-processing utilities are shared across applications.
@@ -249,7 +253,7 @@ After execution:
 
 ```text
 output/
-├── customers.csv
+├── user.csv
 └── logs/
     ├── EXPORT_20260716_143010.log
     └── ERROR_20260716_143010.log
@@ -286,17 +290,14 @@ This sample demonstrates the design philosophy of the **core-ts** ecosystem.
 # Related Projects
 
 - **config-plus** – Configuration management
-- **sql-core** – Standard SQL abstraction
-- **mysql2-core** – MySQL implementation of sql-core
-- **io-one** – File I/O, CSV and fixed-length formatting
 - **logger-core** – Lightweight logging
+- **mysql2-core** – MySQL implementation of sql-core
+- **sql-core** – Standard SQL abstraction
+- **io-one** – File I/O, CSV and fixed-length formatting
+
 
 ---
 
 # License
 
 MIT
-
-```
-
-```
