@@ -10,7 +10,6 @@ Instead of using a large framework, each library has a single responsibility and
 
 - **config-plus** — Configuration management
 - **logger-core** — Logging
-- **sql-core** — Database abstraction
 - **mysql2-core** — MySQL provider
 - **io-one** — File formatting and writing
 
