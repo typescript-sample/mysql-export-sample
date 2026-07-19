@@ -71,12 +71,12 @@ DelimiterFormatter
 
 # Libraries
 
-| Library     | Responsibility                                      |
-| ----------- | --------------------------------------------------- |
-| config-plus | Load and merge application configuration            |
-| logger-core | Logging                                             |
-| mysql2-core | MySQL implementation of sql-core                    |
-| io-one      | CSV formatting, file writing and workflow utilities |
+| Library     | Responsibility                                       |
+| ----------- |------------------------------------------------------|
+| config-plus | Load and merge application configuration             |
+| logger-core | Logging                                              |
+| mysql2-core | MySQL implementation of sql-core and streaming export|
+| io-one      | CSV formatting, file writing and workflow utilities  |
 
 Each library focuses on a single responsibility, making the application easier to understand and maintain.
 
