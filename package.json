@@ -17,7 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "config-plus": "^0.0.9",
-    "io-one": "^0.2.5",
+    "io-one": "^0.3.0",
     "logger-core": "^0.3.3",
     "mysql2": "^3.23.1",
     "mysql2-core": "^0.3.6",

@@ -1,4 +1,4 @@
-import { FixedLengthAttributes } from "io-one"
+import { FixedLengthAttributes } from "onecore"
 
 export interface User {
   id: string
