@@ -1,39 +1,36 @@
-import { Attributes } from 'onecore';
+import { FixedLengthAttributes } from "io-one"
 
 export interface User {
-  id: string;
-  username: string;
-  email?: string;
-  phone?: string;
-  status?: boolean;
-  createdDate?: string;
+  id: string
+  username: string
+  email?: string
+  phone?: string
+  status?: boolean
+  createdDate?: string
 }
 
-export const userModel: Attributes = {
+export const userModel: FixedLengthAttributes = {
   id: {
     key: true,
-    length: 11
+    length: 11,
   },
   username2: {
     length: 10,
     required: true,
-    column: 'username'
+    column: "username",
   },
   email: {
     length: 31,
   },
   phone: {
-    length: 20
+    length: 20,
   },
   status: {
     length: 5,
-    type: 'boolean'
+    type: "boolean",
   },
   createdDate: {
     length: 10,
-    type: 'date'
+    type: "date",
   },
-  age: {
-    type: 'number'
-  }
-};
+}

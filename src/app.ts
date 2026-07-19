@@ -1,40 +1,43 @@
-import { createWriteStream, DelimiterFormatter, FileWriter } from 'io-one';
-import mysql from 'mysql2';
-import { Exporter, ExportService, Statement } from 'mysql2-core';
-import { User, userModel } from './user';
+import { merge } from "config-plus"
+import { createWriteStream, DelimiterFormatter, FileWriter, getPrefix, LogWriter, timeToString } from "io-one"
+import { createLogger } from "logger-core"
+import mysql from "mysql2"
+import { Exporter, Statement } from "mysql2-core"
+import path from "path"
+import { config, environments } from "./config"
+import { User, userModel } from "./user"
 
-const DB_HOST = 'sql6.freesqldatabase.com';
-const DB_USER = 'sql6525477';
-const DB_NAME = 'sql6525477';
-const DB_PWD = 'dqPFB293Gq';
-const USE_SERVICE = false;
+const conf = merge(config, process.env, environments, process.env.ENV)
 
 export class QueryBuilder {
-  build = (): Promise<Statement> => Promise.resolve({
-    query: 'SELECT * FROM users'
-  })
+  build = (): Promise<Statement> =>
+    Promise.resolve({
+      query: "SELECT * FROM userexport",
+    })
 }
 
 async function main() {
-  const dir = './dest_dir/';
-  const streamWrite = createWriteStream(dir, 'export.csv');
-  const writer = new FileWriter(streamWrite);
-  const connection = mysql.createConnection({
-    host: DB_HOST,
-    user: DB_USER,
-    database: DB_NAME,
-    password: DB_PWD
-  });
+  const now = new Date()
+  const errorWriter = new LogWriter(getPrefix(conf.error.prefix, now) + "_" + timeToString(now) + conf.error.suffix, conf.error.directory)
+  const logWriter = new LogWriter(getPrefix(conf.info.prefix, now) + "_" + timeToString(now) + conf.info.suffix, conf.info.directory)
 
-  const formatter = new DelimiterFormatter<User>(',', userModel);
-  const queryBuilder = new QueryBuilder();
+  const logger = createLogger(conf.log, undefined, undefined, errorWriter.write, logWriter.write)
 
-  const exporter = USE_SERVICE
-    ? new ExportService(connection, queryBuilder, formatter, writer, userModel)
-    : new Exporter<User>(connection, queryBuilder.build, formatter.format, writer.write, writer.end, userModel);
-  const total = await exporter.export();
+  const dir = "./dest_dir/"
+  const filename = "export.csv"
+  const streamWrite = createWriteStream(dir, filename)
+  const writer = new FileWriter(streamWrite)
+  const connection = mysql.createConnection(conf.db)
 
-  console.log('total ' + total);
+  const formatter = new DelimiterFormatter<User>(",", userModel)
+  const queryBuilder = new QueryBuilder()
+
+  logger.info(`Export '${path.join(dir, filename)}' file`)
+  const exporter = new Exporter<User>(connection, queryBuilder.build, formatter.format, writer.write, writer.end, userModel)
+  const total = await exporter.export()
+
+  logger.info(`Export '${path.join(dir, filename)}' file. Total: ${total}`)
+  console.log("total " + total)
 }
 
-main();
+main()
